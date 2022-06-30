@@ -1,0 +1,70 @@
+diff -Naur /media/psf/Home/Downloads/tss-rsa-cpp/CMakeLists.txt /media/psf/Home/Downloads/mpc/tss-rsa-cpp/CMakeLists.txt
+--- /media/psf/Home/Downloads/tss-rsa-cpp/CMakeLists.txt	2022-06-29 16:23:35.000000000 +0800
++++ /media/psf/Home/Downloads/mpc/tss-rsa-cpp/CMakeLists.txt	2022-05-31 13:33:04.000000000 +0800
+@@ -11,7 +11,6 @@
+ add_subdirectory(src)
+ 
+ option(ENABLE_TESTS "Enable tests" OFF)
+-option(ENABLE_BENCHMARK "Enable benchmark" OFF)
+ if (${ENABLE_TESTS})
+     enable_testing()
+     include_directories(/usr/local/include)
+diff -Naur /media/psf/Home/Downloads/tss-rsa-cpp/sgx/sgx /media/psf/Home/Downloads/mpc/tss-rsa-cpp/sgx/sgx
+--- /media/psf/Home/Downloads/tss-rsa-cpp/sgx/sgx	2022-06-30 14:25:03.000000000 +0800
++++ /media/psf/Home/Downloads/mpc/tss-rsa-cpp/sgx/sgx	2022-06-30 14:42:21.000000000 +0800
+@@ -0,0 +1,2 @@
++cmake -DCMAKE_SYSTEM_NAME=SGX ..
++make
+diff -Naur /media/psf/Home/Downloads/tss-rsa-cpp/src/CMakeLists.txt /media/psf/Home/Downloads/mpc/tss-rsa-cpp/src/CMakeLists.txt
+--- /media/psf/Home/Downloads/tss-rsa-cpp/src/CMakeLists.txt	2022-06-29 16:23:35.000000000 +0800
++++ /media/psf/Home/Downloads/mpc/tss-rsa-cpp/src/CMakeLists.txt	2022-06-13 15:21:18.000000000 +0800
+@@ -1,9 +1,25 @@
+-find_package(PkgConfig REQUIRED)
++#find_package(PkgConfig REQUIRED)
+ #set(OPENSSL_USE_STATIC_LIBS TRUE)
+-find_package(OpenSSL REQUIRED)
+-find_package(CryptoSuites REQUIRED)
++#find_package(OpenSSL REQUIRED)
++#find_package(CryptoSuites REQUIRED)
++if(CMAKE_SYSTEM_NAME STREQUAL "SGX")
++        message(STATUS "Configuring on/ INTEL SGX##for ${CMAKE_SYSTEM_NAME}")
++        set(SGX_SDK "/opt/intel/sgxsdk")
+ 
+-add_library(${CMAKE_PROJECT_NAME} SHARED
++        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${SGX_COMMON_CFLAGS} -nostdinc -fvisibility=hidden -fpie -fstack-protector")
++        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} -nostdinc++")
++        add_definitions(-DPB_ENABLE_SGX)
++        include_directories(
++           ${SGX_SDK}/include
++           ${SGX_SDK}/include/tlibc
++           ${SGX_SDK}/include/libcxx
++           ${SGX_SDK}/include/tprotobuf
++        
++           )
++ 
++endif()
++
++add_library(${CMAKE_PROJECT_NAME} STATIC
+         crypto-tss-rsa/RSAPrivateKeyShare.cpp
+         crypto-tss-rsa/RSAPublicKey.cpp
+         crypto-tss-rsa/RSAKeyMeta.cpp
+@@ -16,15 +32,10 @@
+         )
+ 
+ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
+-        ${CryptoSuites_INCLUDE_DIRS}
+-        ${OPENSSL_INCLUDE_DIR}
+-        /usr/local/include
++       # ${CryptoSuites_INCLUDE_DIRS}
++      #  ${OPENSSL_INCLUDE_DIR}
++       #
+         )
+ 
+-target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE /usr/local/lib)
++#target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE /usr/local/lib)
+ 
+-target_link_libraries(${CMAKE_PROJECT_NAME}
+-        CryptoSuites
+-        OpenSSL::Crypto
+-        -ldl
+-        )
