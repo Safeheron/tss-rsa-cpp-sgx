@@ -1,0 +1,3 @@
+[submodule "src/tss-rsa-cpp"]
+	path = src/tss-rsa-cpp
+	url = https://github.com/Safeheron/tss-rsa-cpp.git
