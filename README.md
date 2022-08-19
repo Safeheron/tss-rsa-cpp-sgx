@@ -6,8 +6,8 @@ SGX-supported version of [tss-rsa-cpp](https://github.com/Safeheron/tss-rsa-cpp.
 
 
 # Prerequisites
-- [sgx-crypto-suites-cpp](https://github.com/Safeheron/sgx-crypto-suites-cpp.git). See [sgx-crypto-suites-cpp](https://github.com/Safeheron/sgx-crypto-suites-cpp.git).
-- [SGX Components](https://01.org/intel-software-guard-extensions/downloads)
+- [sgx-crypto-suites-cpp](https://github.com/Safeheron/sgx-safeheron-crypto-suites-cpp.git). 
+- [SGX Components](https://01.org/intel-software-guard-extensions/downloads):
     - SGX Driver. See [SGX-Driver-Installation](doc/SGX-Driver-Installation.md).
     - SGX SDK (SGX SDK 2.16 or later is required). See [SGX-SDK-Installation](doc/SGX-SDK-Installation.md).
 - [Intel SGX-SSL](https://github.com/intel/intel-sgx-ssl.git). See [SGX-SSL-Installation](doc/SGX-SSL-Installation.md).
