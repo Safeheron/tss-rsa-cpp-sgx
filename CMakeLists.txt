@@ -30,9 +30,14 @@ set(TRUST_SGX_SSL_LIBRARY "${SGX_SSL_LIBRARIES_DIR}/libsgx_tsgxssl.a")
 set(TRUST_SGX_SSL_CRYPTO_LIBRARY "${SGX_SSL_LIBRARIES_DIR}/libsgx_tsgxssl_crypto.a")
 set(UNTRUST_SGX_SSL_LIBRARY "${SGX_SSL_LIBRARIES_DIR}/libsgx_usgxssl.a")
 
-AUX_SOURCE_DIRECTORY(src/tss-rsa-cpp/src/crypto-tss-rsa TSS_RSA_SOURCE)
+# Set source file path
+set(TSS_RSA_SOURCE_PATH "src/tss-rsa-cpp/src/crypto-tss-rsa")
 
-add_library(${CMAKE_PROJECT_NAME} STATIC ${TSS_RSA_SOURCE})
+AUX_SOURCE_DIRECTORY(${TSS_RSA_SOURCE_PATH} TSS_RSA_SOURCE)
+
+add_library(${CMAKE_PROJECT_NAME} STATIC
+        ${TSS_RSA_SOURCE}
+        ${TSS_RSA_SOURCE_PATH}/proto_gen/tss_rsa.pb.switch.cc)
 
 # Additional include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
