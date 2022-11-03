@@ -6,7 +6,7 @@ SGX-supported version of [tss-rsa-cpp](https://github.com/Safeheron/tss-rsa-cpp.
 
 
 # Prerequisites
-- [sgx-safeheron-crypto-suites-cpp](https://github.com/Safeheron/sgx-safeheron-crypto-suites-cpp.git). 
+- [safeheron-crypto-suites-cpp-sgx](https://github.com/Safeheron/safeheron-crypto-suites-cpp-sgx.git). 
 - [SGX Components](https://01.org/intel-software-guard-extensions/downloads):
     - SGX Driver. See [SGX-Driver-Installation](doc/SGX-Driver-Installation.md).
     - SGX SDK (SGX SDK 2.16 or later is required). See [SGX-SDK-Installation](doc/SGX-SDK-Installation.md).
@@ -15,15 +15,15 @@ SGX-supported version of [tss-rsa-cpp](https://github.com/Safeheron/tss-rsa-cpp.
 
 # Build and Install
 ```shell
-$ git clone --recurse-submodules https://github.com/Safeheron/sgx-tss-rsa-cpp.git
-$ cd sgx-tss-rsa-cpp 
+$ git clone --recurse-submodules https://github.com/Safeheron/tss-rsa-cpp-sgx.git
+$ cd tss-rsa-cpp-sgx 
 $ mkdir build && cd build
 $ cmake ..
 $ make
 $ sudo make install
 ```
 
-# To start using sgx-tss-rsa-cpp
+# To start using tss-rsa-cpp-sgx
 
 ## CMake
 
@@ -41,8 +41,8 @@ set(SGX_COMMON_C_FLAGS "-m64 -O2")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -nostdinc -fmacro-prefix-map=${CMAKE_SOURCE_DIR}=/safeheron")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} -nostdinc++ -fmacro-prefix-map=${CMAKE_SOURCE_DIR}=/safeheron")
 
-find_package(SGXSafeheronCryptoSuites REQUIRED)
-find_package(SGXCryptoTSSRSA REQUIRED)
+find_package(SafeheronCryptoSuitesSgx REQUIRED)
+find_package(CryptoTSSRSASgx REQUIRED)
 
 # Set the sgxsdk path
 set(SGX_SDK_PATH "/opt/intel/sgxsdk")
@@ -64,8 +64,8 @@ add_library(${PROJECT_NAME} STATIC XXXX.cpp)
 
 # Additional include paths
 target_include_directories(${PROJECT_NAME} PUBLIC
-        ${SGXSafeheronCryptoSuites_INCLUDE_DIRS}
-        ${SGXCryptoTSSRSA_INCLUDE_DIRS}
+        ${SafeheronCryptoSuitesSgx_INCLUDE_DIRS}
+        ${CryptoTSSRSASgx_INCLUDE_DIRS}
         ${SGX_SSL_INCLUDE_DIR}
         ${SGX_SDK_INCLUDE_DIR}
         ${SGX_C_INCLUDE_DIR}
@@ -77,7 +77,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${CMAKE_PROJECT_NAME} "${SGX_COMMON_C_FLAGS} \
         -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles -L${SGX_SDK_LIBRARIES_DIR} \
         -Wl,--whole-archive –lsgx_trts ${TRUST_SGX_SSL_LIBRARY} -Wl,--no-whole-archive \
-        -Wl,--start-group ${TRUST_SGX_SSL_CRYPTO_LIBRARY} ${SGXSafeheronCryptoSuites_LIBRARY} ${SGXCryptoTSSRSA_LIBRARY} -lsgx_pthread -lsgx_protobuf -lsgx_tstdc -lsgx_tcxx -lsgx_tcrypto -lsgx_tprotected_fs -l${SGX_TSVC_LIB} -Wl,--end-group \
+        -Wl,--start-group ${TRUST_SGX_SSL_CRYPTO_LIBRARY} ${SafeheronCryptoSuitesSgx_LIBRARY} ${CryptoTSSRSASgx_LIBRARY} -lsgx_pthread -lsgx_protobuf -lsgx_tstdc -lsgx_tcxx -lsgx_tcrypto -lsgx_tprotected_fs -l${SGX_TSVC_LIB} -Wl,--end-group \
         -Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined \
         -Wl,-pie,-eenclave_entry -Wl,--export-dynamic \
         -Wl,--defsym,__ImageBase=0"

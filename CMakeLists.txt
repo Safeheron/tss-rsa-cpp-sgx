@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.20)
 
-project("SGXCryptoTSSRSA" VERSION 1.0.1)
+project("CryptoTSSRSASgx" VERSION 1.0.1)
 
 add_definitions(-DPB_ENABLE_SGX)
 
-find_package(SGXSafeheronCryptoSuites REQUIRED)
+find_package(SafeheronCryptoSuitesSgx REQUIRED)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_BUILD_TYPE "Release")
@@ -41,7 +41,7 @@ add_library(${CMAKE_PROJECT_NAME} STATIC
 
 # Additional include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-        ${SGXSafeheronCryptoSuites_INCLUDE_DIRS}
+        ${SafeheronCryptoSuitesSgx_INCLUDE_DIRS}
         ${SGX_SSL_INCLUDE_DIR}
         ${SGX_SDK_INCLUDE_DIR}
         ${SGX_C_INCLUDE_DIR}
@@ -53,7 +53,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
 target_link_libraries(${CMAKE_PROJECT_NAME} "${SGX_COMMON_C_FLAGS} \
         -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles -L${SGX_SDK_LIBRARIES_DIR} \
         -Wl,--whole-archive –lsgx_trts ${TRUST_SGX_SSL_LIBRARY} -Wl,--no-whole-archive \
-        -Wl,--start-group ${TRUST_SGX_SSL_CRYPTO_LIBRARY} ${SGXSafeheronCryptoSuites_LIBRARY} -lsgx_pthread -lsgx_protobuf -lsgx_tstdc -lsgx_tcxx -lsgx_tcrypto -lsgx_tprotected_fs -l${SGX_TSVC_LIB} -Wl,--end-group \
+        -Wl,--start-group ${TRUST_SGX_SSL_CRYPTO_LIBRARY} ${SafeheronCryptoSuitesSgx_LIBRARY} -lsgx_pthread -lsgx_protobuf -lsgx_tstdc -lsgx_tcxx -lsgx_tcrypto -lsgx_tprotected_fs -l${SGX_TSVC_LIB} -Wl,--end-group \
         -Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined \
         -Wl,-pie,-eenclave_entry -Wl,--export-dynamic \
         -Wl,--defsym,__ImageBase=0"
