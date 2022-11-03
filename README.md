@@ -1,4 +1,4 @@
-# sgx-tss-rsa-cpp
+# tss-rsa-cpp-sgx
 
 ![image](doc/logo.png)
 
